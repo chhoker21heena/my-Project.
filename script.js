@@ -1,49 +1,88 @@
-const addEventBtn = document.getElementById("addEventBtn");
-const clearEventsBtn = document.getElementById("clearEventsBtn");
-const eventsContainer = document.getElementById("eventsContainer");
-const eventCount = document.getElementById("eventCount");
+// Array to store events
+let events = [];
+
+// Function to add new event
+function addEvent() {
+
+    let title = document.getElementById("title").value;
+    let date = document.getElementById("date").value;
+    let category = document.getElementById("category").value;
+    let description = document.getElementById("description").value;
+
+    if (title === "" || date === "" || description === "") {
+        alert("Please fill all fields!");
+        return;
+    }
+
+    let event = {
+        title: title,
+        date: date,
+        category: category,
+        description: description
+    };
+
+    events.push(event);
+
+    displayEvents();
+
+    document.getElementById("title").value = "";
+    document.getElementById("date").value = "";
+    document.getElementById("description").value = "";
+}
 
 
-addEventBtn.addEventListener("click", function () {
-  const title = document.getElementById("title").value;
-  const date = document.getElementById("date").value;
-  const category = document.getElementById("category").value;
-  const description = document.getElementById("description").value;
+// Function to display events
+function displayEvents() {
 
-  if (title.trim() === "" || date === "") {
-    alert("Please enter title and date");
-    return;
-  }
+    let eventList = document.getElementById("eventList");
+    eventList.innerHTML = "";
 
-  const eventDiv = document.createElement("div");
-  eventDiv.classList.add("event-item");
+    events.forEach(function(event, index) {
 
-  eventDiv.innerHTML = `
-    <h4>${title}</h4>
-    <p><strong>Date:</strong> ${date}</p>
-    <p><strong>Category:</strong> ${category}</p>
-    <p>${description}</p>
-    <button class="delete-btn">Delete</button>
-  `;
+        eventList.innerHTML += `
+            <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:5px;">
+                <h3>${event.title}</h3>
+                <p><strong>Date:</strong> ${event.date}</p>
+                <p><strong>Category:</strong> ${event.category}</p>
+                <p>${event.description}</p>
+                <button onclick="deleteEvent(${index})">Delete</button>
+            </div>
+        `;
+    });
+}
 
-  // Delete event
-  eventDiv.querySelector(".delete-btn").addEventListener("click", function () {
-    eventDiv.remove();
-   
-  });
 
-  eventsContainer.appendChild(eventDiv);
+// Function to delete single event
+function deleteEvent(index) {
+    events.splice(index, 1);
+    displayEvents();
+}
 
-  
 
-  // Clear inputs
-  document.getElementById("title").value = "";
-  document.getElementById("date").value = "";
-  document.getElementById("description").value = "";
-});
+// Function to clear all events
+function clearAllEvents() {
+    events = [];
+    displayEvents();
+}
 
-// Clear all events
-clearEventsBtn.addEventListener("click", function () {
-  eventsContainer.innerHTML = "";
 
-});
+// Function to add sample events
+function addSampleEvents() {
+
+    events = [
+        {
+            title: "Project Submission",
+            date: "2026-03-01",
+            category: "College",
+            description: "Submit web development project."
+        },
+        {
+            title: "Birthday Party",
+            date: "2026-04-10",
+            category: "Personal",
+            description: "Attend friend's birthday party."
+        }
+    ];
+
+    displayEvents();
+}
